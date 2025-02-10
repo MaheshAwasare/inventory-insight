@@ -1,25 +1,27 @@
-import { User, InsertUser, Product, InsertProduct, Supplier, InsertSupplier } from "@shared/schema";
+import { users, products, suppliers, type User, type InsertUser, type Product, type InsertProduct, type Supplier, type InsertSupplier } from "@shared/schema";
+import { db } from "./db";
+import { eq } from "drizzle-orm";
 import session from "express-session";
-import createMemoryStore from "memorystore";
-import { mockProducts, mockSuppliers, mockUsers } from "./mock-data";
+import connectPg from "connect-pg-simple";
+import { pool } from "./db";
 
-const MemoryStore = createMemoryStore(session);
+const PostgresSessionStore = connectPg(session);
 
 export interface IStorage {
-  sessionStore: session.SessionStore;
-  
+  sessionStore: session.Store;
+
   // User operations
   getUser(id: number): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
-  
+
   // Product operations
   getProducts(): Promise<Product[]>;
   getProduct(id: number): Promise<Product | undefined>;
   createProduct(product: InsertProduct): Promise<Product>;
   updateProduct(id: number, product: Partial<Product>): Promise<Product>;
   deleteProduct(id: number): Promise<void>;
-  
+
   // Supplier operations
   getSuppliers(): Promise<Supplier[]>;
   getSupplier(id: number): Promise<Supplier | undefined>;
@@ -28,106 +30,87 @@ export interface IStorage {
   deleteSupplier(id: number): Promise<void>;
 }
 
-export class MemStorage implements IStorage {
-  private users: Map<number, User>;
-  private products: Map<number, Product>;
-  private suppliers: Map<number, Supplier>;
-  sessionStore: session.SessionStore;
-  private currentId: { [key: string]: number };
+export class DatabaseStorage implements IStorage {
+  sessionStore: session.Store;
 
   constructor() {
-    this.users = new Map(mockUsers.map(u => [u.id, u]));
-    this.products = new Map(mockProducts.map(p => [p.id, p]));
-    this.suppliers = new Map(mockSuppliers.map(s => [s.id, s]));
-    this.sessionStore = new MemoryStore({
-      checkPeriod: 86400000,
+    this.sessionStore = new PostgresSessionStore({
+      pool,
+      createTableIfMissing: true,
     });
-    this.currentId = {
-      users: mockUsers.length + 1,
-      products: mockProducts.length + 1,
-      suppliers: mockSuppliers.length + 1,
-    };
   }
 
   // User operations
   async getUser(id: number): Promise<User | undefined> {
-    return this.users.get(id);
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user;
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(
-      (user) => user.username === username,
-    );
+    const [user] = await db.select().from(users).where(eq(users.username, username));
+    return user;
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
-    const id = this.currentId.users++;
-    const user: User = { ...insertUser, id, role: "user" };
-    this.users.set(id, user);
+    const [user] = await db.insert(users).values(insertUser).returning();
     return user;
   }
 
   // Product operations
   async getProducts(): Promise<Product[]> {
-    return Array.from(this.products.values());
+    return await db.select().from(products);
   }
 
   async getProduct(id: number): Promise<Product | undefined> {
-    return this.products.get(id);
+    const [product] = await db.select().from(products).where(eq(products.id, id));
+    return product;
   }
 
   async createProduct(insertProduct: InsertProduct): Promise<Product> {
-    const id = this.currentId.products++;
-    const product: Product = { 
-      ...insertProduct, 
-      id, 
-      createdAt: new Date() 
-    };
-    this.products.set(id, product);
+    const [product] = await db.insert(products).values(insertProduct).returning();
     return product;
   }
 
   async updateProduct(id: number, update: Partial<Product>): Promise<Product> {
-    const existing = await this.getProduct(id);
-    if (!existing) throw new Error("Product not found");
-    
-    const updated = { ...existing, ...update };
-    this.products.set(id, updated);
-    return updated;
+    const [product] = await db
+      .update(products)
+      .set(update)
+      .where(eq(products.id, id))
+      .returning();
+    return product;
   }
 
   async deleteProduct(id: number): Promise<void> {
-    this.products.delete(id);
+    await db.delete(products).where(eq(products.id, id));
   }
 
   // Supplier operations
   async getSuppliers(): Promise<Supplier[]> {
-    return Array.from(this.suppliers.values());
+    return await db.select().from(suppliers);
   }
 
   async getSupplier(id: number): Promise<Supplier | undefined> {
-    return this.suppliers.get(id);
+    const [supplier] = await db.select().from(suppliers).where(eq(suppliers.id, id));
+    return supplier;
   }
 
   async createSupplier(insertSupplier: InsertSupplier): Promise<Supplier> {
-    const id = this.currentId.suppliers++;
-    const supplier: Supplier = { ...insertSupplier, id };
-    this.suppliers.set(id, supplier);
+    const [supplier] = await db.insert(suppliers).values(insertSupplier).returning();
     return supplier;
   }
 
   async updateSupplier(id: number, update: Partial<Supplier>): Promise<Supplier> {
-    const existing = await this.getSupplier(id);
-    if (!existing) throw new Error("Supplier not found");
-    
-    const updated = { ...existing, ...update };
-    this.suppliers.set(id, updated);
-    return updated;
+    const [supplier] = await db
+      .update(suppliers)
+      .set(update)
+      .where(eq(suppliers.id, id))
+      .returning();
+    return supplier;
   }
 
   async deleteSupplier(id: number): Promise<void> {
-    this.suppliers.delete(id);
+    await db.delete(suppliers).where(eq(suppliers.id, id));
   }
 }
 
-export const storage = new MemStorage();
+export const storage = new DatabaseStorage();
