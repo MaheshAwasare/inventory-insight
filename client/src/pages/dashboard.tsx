@@ -64,7 +64,7 @@ export default function Dashboard() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                ${products?.reduce((acc, p) => acc + (p.price * p.quantity), 0) || 0}
+                ₹{products?.reduce((acc, p) => acc + (p.price * p.quantity), 0) / 100 || 0}
               </div>
             </CardContent>
           </Card>

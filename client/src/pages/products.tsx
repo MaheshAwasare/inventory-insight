@@ -94,7 +94,7 @@ export default function Products() {
                   >
                     {product.quantity}
                   </TableCell>
-                  <TableCell>${(product.price / 100).toFixed(2)}</TableCell>
+                  <TableCell>₹{(product.price / 100).toFixed(2)}</TableCell>
                   <TableCell>
                     {suppliers?.find((s) => s.id === product.supplierId)?.name}
                   </TableCell>
@@ -120,7 +120,7 @@ export default function Products() {
                           />
                         </DialogContent>
                       </Dialog>
-                      
+
                       <AlertDialog>
                         <AlertDialogTrigger asChild>
                           <Button variant="ghost" size="icon">
