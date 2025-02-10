@@ -21,51 +21,63 @@ export default function Dashboard() {
   const lowStock = products?.filter(p => p.quantity <= p.minQuantity) || [];
   const totalProducts = products?.length || 0;
   const activeSuppliers = suppliers?.filter(s => s.active).length || 0;
+  const totalStockValue = products?.reduce((acc, p) => acc + (p.price * p.quantity), 0) / 100 || 0;
 
   return (
     <div className="flex h-screen">
       <SidebarNav />
-      <main className="flex-1 p-8 overflow-auto">
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          <Card>
+      <main className="flex-1 p-8 overflow-auto bg-background">
+        <h1 className="text-3xl font-bold tracking-tight mb-8">Dashboard</h1>
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+          <Card className="hover:shadow-md transition-shadow">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total Products</CardTitle>
               <Package className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{totalProducts}</div>
+              <p className="text-xs text-muted-foreground mt-1">
+                Items in inventory
+              </p>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="hover:shadow-md transition-shadow">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Active Suppliers</CardTitle>
               <Users className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{activeSuppliers}</div>
+              <p className="text-xs text-muted-foreground mt-1">
+                Current partnerships
+              </p>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="hover:shadow-md transition-shadow">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Low Stock Items</CardTitle>
               <AlertTriangle className="h-4 w-4 text-destructive" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{lowStock.length}</div>
+              <p className="text-xs text-muted-foreground mt-1">
+                Need reordering
+              </p>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="hover:shadow-md transition-shadow">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Stock Value</CardTitle>
+              <CardTitle className="text-sm font-medium">Total Stock Value</CardTitle>
               <TrendingUp className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">
-                ₹{products?.reduce((acc, p) => acc + (p.price * p.quantity), 0) / 100 || 0}
-              </div>
+              <div className="text-2xl font-bold">₹{totalStockValue.toLocaleString('en-IN', { maximumFractionDigits: 2 })}</div>
+              <p className="text-xs text-muted-foreground mt-1">
+                Current inventory value
+              </p>
             </CardContent>
           </Card>
         </div>
