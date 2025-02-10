@@ -29,52 +29,65 @@ export default function Dashboard() {
       <main className="flex-1 p-8 overflow-auto bg-background">
         <h1 className="text-3xl font-bold tracking-tight mb-8">Dashboard</h1>
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-          <Card className="hover:shadow-md transition-shadow">
+          <Card className="hover:shadow-md transition-shadow p-2">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total Products</CardTitle>
-              <Package className="h-4 w-4 text-muted-foreground" />
+              <div className="p-2 bg-primary/10 rounded-full">
+                <Package className="h-5 w-5 text-primary" />
+              </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{totalProducts}</div>
+              <div className="text-3xl font-bold truncate">{totalProducts}</div>
               <p className="text-xs text-muted-foreground mt-1">
                 Items in inventory
               </p>
             </CardContent>
           </Card>
 
-          <Card className="hover:shadow-md transition-shadow">
+          <Card className="hover:shadow-md transition-shadow p-2">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Active Suppliers</CardTitle>
-              <Users className="h-4 w-4 text-muted-foreground" />
+              <div className="p-2 bg-primary/10 rounded-full">
+                <Users className="h-5 w-5 text-primary" />
+              </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{activeSuppliers}</div>
+              <div className="text-3xl font-bold truncate">{activeSuppliers}</div>
               <p className="text-xs text-muted-foreground mt-1">
                 Current partnerships
               </p>
             </CardContent>
           </Card>
 
-          <Card className="hover:shadow-md transition-shadow">
+          <Card className="hover:shadow-md transition-shadow p-2">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Low Stock Items</CardTitle>
-              <AlertTriangle className="h-4 w-4 text-destructive" />
+              <div className="p-2 bg-destructive/10 rounded-full">
+                <AlertTriangle className="h-5 w-5 text-destructive" />
+              </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{lowStock.length}</div>
+              <div className="text-3xl font-bold truncate">{lowStock.length}</div>
               <p className="text-xs text-muted-foreground mt-1">
                 Need reordering
               </p>
             </CardContent>
           </Card>
 
-          <Card className="hover:shadow-md transition-shadow">
+          <Card className="hover:shadow-md transition-shadow p-2">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total Stock Value</CardTitle>
-              <TrendingUp className="h-4 w-4 text-muted-foreground" />
+              <div className="p-2 bg-primary/10 rounded-full">
+                <TrendingUp className="h-5 w-5 text-primary" />
+              </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">₹{totalStockValue.toLocaleString('en-IN', { maximumFractionDigits: 2 })}</div>
+              <div className="text-3xl font-bold truncate">
+                ₹{totalStockValue.toLocaleString('en-IN', { 
+                  maximumFractionDigits: 2,
+                  minimumFractionDigits: 2 
+                })}
+              </div>
               <p className="text-xs text-muted-foreground mt-1">
                 Current inventory value
               </p>

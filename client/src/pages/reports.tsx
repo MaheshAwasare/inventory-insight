@@ -33,7 +33,7 @@ export default function Reports() {
     const totalValue = supplierProducts.reduce((acc, p) => acc + (p.price * p.quantity), 0);
     return {
       name: supplier.name,
-      value: totalValue / 100 // Convert cents to dollars
+      value: totalValue / 100 // Convert cents to rupees
     };
   });
 
@@ -41,15 +41,17 @@ export default function Reports() {
     <div className="flex h-screen">
       <SidebarNav />
       <main className="flex-1 p-8 overflow-auto">
-        <h1 className="text-2xl font-bold mb-6">Reports & Analytics</h1>
-        
+        <h1 className="text-2xl font-bold tracking-tight mb-6">Reports & Analytics</h1>
+
         <div className="grid gap-6 md:grid-cols-2">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-base font-medium">
                 Stock Levels by Product
               </CardTitle>
-              <BarChartIcon className="h-4 w-4 text-muted-foreground" />
+              <div className="p-2 bg-primary/10 rounded-full">
+                <BarChartIcon className="h-4 w-4 text-primary" />
+              </div>
             </CardHeader>
             <CardContent>
               <div className="h-[300px] mt-4">
@@ -71,7 +73,9 @@ export default function Reports() {
               <CardTitle className="text-base font-medium">
                 Inventory Value by Supplier
               </CardTitle>
-              <PieChartIcon className="h-4 w-4 text-muted-foreground" />
+              <div className="p-2 bg-primary/10 rounded-full">
+                <PieChartIcon className="h-4 w-4 text-primary" />
+              </div>
             </CardHeader>
             <CardContent>
               <div className="h-[300px] mt-4">
@@ -85,7 +89,10 @@ export default function Reports() {
                       outerRadius={100}
                       fill="#8884d8"
                       dataKey="value"
-                      label={({ name, value }) => `${name}: $${value.toFixed(2)}`}
+                      label={({ name, value }) => `${name}: ₹${value.toLocaleString('en-IN', { 
+                        maximumFractionDigits: 2,
+                        minimumFractionDigits: 2 
+                      })}`}
                     >
                       {supplierDistribution?.map((entry, index) => (
                         <Cell 

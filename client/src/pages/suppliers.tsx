@@ -36,7 +36,7 @@ export default function Suppliers() {
   if (isLoading) {
     return (
       <div className="flex h-screen items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin" />
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
   }
@@ -44,13 +44,13 @@ export default function Suppliers() {
   return (
     <div className="flex h-screen">
       <SidebarNav />
-      <main className="flex-1 p-8 overflow-auto">
+      <main className="flex-1 p-8 overflow-auto bg-background">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold">Suppliers</h1>
+          <h1 className="text-2xl font-bold tracking-tight">Suppliers</h1>
           <Dialog>
             <DialogTrigger asChild>
-              <Button>
-                <Plus className="h-4 w-4 mr-2" />
+              <Button className="gap-2">
+                <Plus className="h-4 w-4" />
                 Add Supplier
               </Button>
             </DialogTrigger>
@@ -63,25 +63,27 @@ export default function Suppliers() {
           </Dialog>
         </div>
 
-        <div className="border rounded-lg">
+        <div className="border rounded-lg overflow-hidden">
           <Table>
             <TableHeader>
-              <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>Phone</TableHead>
-                <TableHead>Address</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Actions</TableHead>
+              <TableRow className="bg-muted/50">
+                <TableHead className="font-semibold">Name</TableHead>
+                <TableHead className="font-semibold">Email</TableHead>
+                <TableHead className="font-semibold">Phone</TableHead>
+                <TableHead className="font-semibold">Address</TableHead>
+                <TableHead className="font-semibold">Status</TableHead>
+                <TableHead className="font-semibold w-[100px]">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {suppliers?.map((supplier) => (
-                <TableRow key={supplier.id}>
-                  <TableCell>{supplier.name}</TableCell>
+                <TableRow key={supplier.id} className="hover:bg-muted/30">
+                  <TableCell className="font-medium max-w-[200px] truncate">
+                    {supplier.name}
+                  </TableCell>
                   <TableCell>{supplier.email}</TableCell>
                   <TableCell>{supplier.phone}</TableCell>
-                  <TableCell>{supplier.address}</TableCell>
+                  <TableCell className="max-w-[200px] truncate">{supplier.address}</TableCell>
                   <TableCell>
                     <Badge variant={supplier.active ? "default" : "secondary"}>
                       {supplier.active ? "Active" : "Inactive"}
@@ -91,7 +93,7 @@ export default function Suppliers() {
                     <div className="flex space-x-2">
                       <Dialog>
                         <DialogTrigger asChild>
-                          <Button variant="ghost" size="icon">
+                          <Button variant="ghost" size="icon" className="hover:bg-primary/10">
                             <Edit className="h-4 w-4" />
                           </Button>
                         </DialogTrigger>
@@ -102,10 +104,10 @@ export default function Suppliers() {
                           <SupplierForm supplier={supplier} />
                         </DialogContent>
                       </Dialog>
-                      
+
                       <AlertDialog>
                         <AlertDialogTrigger asChild>
-                          <Button variant="ghost" size="icon">
+                          <Button variant="ghost" size="icon" className="hover:bg-destructive/10">
                             <Trash2 className="h-4 w-4 text-destructive" />
                           </Button>
                         </AlertDialogTrigger>
@@ -119,7 +121,7 @@ export default function Suppliers() {
                           <AlertDialogFooter>
                             <AlertDialogCancel>Cancel</AlertDialogCancel>
                             <AlertDialogAction
-                              className="bg-destructive text-destructive-foreground"
+                              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                               onClick={() => deleteSupplier(supplier.id)}
                             >
                               Delete

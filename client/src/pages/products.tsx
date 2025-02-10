@@ -41,7 +41,7 @@ export default function Products() {
   if (isLoading) {
     return (
       <div className="flex h-screen items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin" />
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
   }
@@ -49,13 +49,13 @@ export default function Products() {
   return (
     <div className="flex h-screen">
       <SidebarNav />
-      <main className="flex-1 p-8 overflow-auto">
+      <main className="flex-1 p-8 overflow-auto bg-background">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold">Products</h1>
+          <h1 className="text-2xl font-bold tracking-tight">Products</h1>
           <Dialog>
             <DialogTrigger asChild>
-              <Button>
-                <Plus className="h-4 w-4 mr-2" />
+              <Button className="gap-2">
+                <Plus className="h-4 w-4" />
                 Add Product
               </Button>
             </DialogTrigger>
@@ -68,34 +68,41 @@ export default function Products() {
           </Dialog>
         </div>
 
-        <div className="border rounded-lg">
+        <div className="border rounded-lg overflow-hidden">
           <Table>
             <TableHeader>
-              <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>SKU</TableHead>
-                <TableHead>Quantity</TableHead>
-                <TableHead>Price</TableHead>
-                <TableHead>Supplier</TableHead>
-                <TableHead>Actions</TableHead>
+              <TableRow className="bg-muted/50">
+                <TableHead className="font-semibold">Name</TableHead>
+                <TableHead className="font-semibold">SKU</TableHead>
+                <TableHead className="font-semibold">Quantity</TableHead>
+                <TableHead className="font-semibold">Price</TableHead>
+                <TableHead className="font-semibold">Supplier</TableHead>
+                <TableHead className="font-semibold w-[100px]">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {products?.map((product) => (
-                <TableRow key={product.id}>
-                  <TableCell>{product.name}</TableCell>
-                  <TableCell>{product.sku}</TableCell>
+                <TableRow key={product.id} className="hover:bg-muted/30">
+                  <TableCell className="font-medium max-w-[200px] truncate">
+                    {product.name}
+                  </TableCell>
+                  <TableCell className="font-mono">{product.sku}</TableCell>
                   <TableCell
                     className={
                       product.quantity <= product.minQuantity
-                        ? "text-destructive"
+                        ? "text-destructive font-medium"
                         : ""
                     }
                   >
                     {product.quantity}
                   </TableCell>
-                  <TableCell>₹{(product.price / 100).toFixed(2)}</TableCell>
-                  <TableCell>
+                  <TableCell className="font-medium">
+                    ₹{(product.price / 100).toLocaleString('en-IN', { 
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2 
+                    })}
+                  </TableCell>
+                  <TableCell className="max-w-[200px] truncate">
                     {suppliers?.find((s) => s.id === product.supplierId)?.name}
                   </TableCell>
                   <TableCell>
@@ -105,6 +112,7 @@ export default function Products() {
                           <Button
                             variant="ghost"
                             size="icon"
+                            className="hover:bg-primary/10"
                             onClick={() => setEditProduct(product)}
                           >
                             <Edit className="h-4 w-4" />
@@ -123,7 +131,11 @@ export default function Products() {
 
                       <AlertDialog>
                         <AlertDialogTrigger asChild>
-                          <Button variant="ghost" size="icon">
+                          <Button 
+                            variant="ghost" 
+                            size="icon"
+                            className="hover:bg-destructive/10"
+                          >
                             <Trash2 className="h-4 w-4 text-destructive" />
                           </Button>
                         </AlertDialogTrigger>
@@ -137,7 +149,7 @@ export default function Products() {
                           <AlertDialogFooter>
                             <AlertDialogCancel>Cancel</AlertDialogCancel>
                             <AlertDialogAction
-                              className="bg-destructive text-destructive-foreground"
+                              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                               onClick={() => deleteProduct(product.id)}
                             >
                               Delete
