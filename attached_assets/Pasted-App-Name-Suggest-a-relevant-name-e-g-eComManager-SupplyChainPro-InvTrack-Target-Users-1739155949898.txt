@@ -1,0 +1,74 @@
+App Name: (Suggest a relevant name, e.g., "eComManager," "SupplyChainPro," "InvTrack")
+
+Target Users: E-commerce business owners, inventory managers, supply chain managers, warehouse staff.
+
+Core Functionalities:
+
+Inventory Management: (Same as previous prompt, but with mock mode considerations)
+
+Product Catalog:
+
+Prompt: Design the product catalog to work seamlessly in both mock and backend modes.
+Components:
+Supabase (Backend Mode): Tables for products, categories, variations, etc.
+Mock Data (Mock Mode): Create mock data in JSON format for products, categories, etc. Consider using a library like Faker.js for generating realistic mock data.
+React: Components should use a conditional approach to fetch data. If MODE is backend, use the Supabase client. If MODE is mock, use the mock data. Abstract data fetching logic into reusable functions or hooks.
+Stock Tracking: (Same considerations for mock/backend)
+
+Warehouse Management (Optional): (Same considerations for mock/backend)
+
+Supplier Management: (Same as previous prompt, but with mock mode considerations)
+
+Supplier Database: (Same considerations for mock/backend)
+
+Purchase Orders (POs): (Same considerations for mock/backend)
+
+Supplier Performance Tracking (Optional): (Same considerations for mock/backend)
+
+Reporting and Analytics:
+
+Prompt: Design the reporting system to work in both modes. In mock mode, generate reports based on the mock data.
+Components:
+Supabase (Backend Mode): Supabase SQL queries.
+Mock Data (Mock Mode): Functions to process and aggregate mock data for reports.
+React: Components for displaying reports, using conditional logic based on MODE.
+User Management and Security:
+
+Prompt: In mock mode, implement a simplified authentication system (e.g., hardcoded credentials or a simple login form that always succeeds). In backend mode, use Supabase Auth.
+Components:
+Supabase (Backend Mode): Supabase Auth.
+Mock Authentication (Mock Mode): Implement mock authentication.
+React: Components for login/signup, protected routes, and user context, using conditional logic based on MODE.
+Integrations:
+
+Prompt: In mock mode, provide mock responses for any external API calls.
+Components:
+Supabase (Backend Mode): Supabase Functions or a separate backend service.
+Mock Integrations (Mock Mode): Implement mock API calls and responses.
+React: Components for triggering integration actions, using conditional logic based on MODE.
+Technical Considerations:
+
+Frontend: React
+Backend: Supabase (or Mock Mode)
+State Management: Redux, Context API, or similar
+UI Library: Material UI, Ant Design, or similar (optional)
+Routing: React Router
+Database: PostgreSQL (provided by Supabase - Backend Mode) / JSON (Mock Mode)
+Storage: Supabase Storage (Backend Mode) / Mock Storage (Mock Mode - e.g., in-memory or local storage)
+Authentication: Supabase Auth (Backend Mode) / Mock Authentication (Mock Mode)
+Environment Variable: MODE (either mock or backend)
+Implementation Details for Mock Mode:
+
+Data Fetching: Create custom hooks or functions (e.g., useProducts, useSuppliers) that handle data fetching based on the MODE variable.
+Mock API Calls: In mock mode, these hooks/functions should return mock data directly instead of making API calls to Supabase.
+Conditional Rendering: Use the MODE variable to conditionally render UI elements or components that depend on the backend functionality (e.g., showing Supabase-specific features only in backend mode).
+Mock Storage: If you need to simulate file storage in mock mode, you can use in-memory storage (for quick testing) or local storage (for persistence across sessions).
+UI/UX Design: (Same as previous prompt)
+
+Deliverables:
+
+React source code
+Supabase SQL scripts (for table creation, RLS policies, etc. - only for backend mode)
+Mock data files (JSON)
+API documentation (Supabase automatically generates API docs - only for backend mode)
+User manual
